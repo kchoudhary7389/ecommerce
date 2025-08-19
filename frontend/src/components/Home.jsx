@@ -109,8 +109,7 @@ function Home() {
       setTimeout(() => {
         setRatingMessage("");
       }, 2000);
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   return (
@@ -225,7 +224,8 @@ function Home() {
       <header className="bg-white hidden sm:block shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
-            <Link to="/home" className="text-2xl font-bold text-gray-800">
+            <Link to="/home" className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+            <img className="h-7 w-7 " src="/shopping-bag.png" alt="" />
               BagStore
             </Link>
             <div className="flex items-center space-x-4">
@@ -266,8 +266,9 @@ function Home() {
           <div className="flex justify-between items-center py-4">
             <Link
               to="/home"
-              className="sm:text-2xl text-lg font-bold text-gray-800"
+              className="sm:text-2xl text-lg font-bold text-gray-800 flex items-center gap-1"
             >
+               <img className="h-5 w-5 " src="/shopping-bag.png" alt="" />
               BagStore
             </Link>
             <div className="flex items-center space-x-4">

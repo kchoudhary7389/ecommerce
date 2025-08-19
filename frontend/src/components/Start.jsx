@@ -40,7 +40,8 @@ function Start() {
     <div className="min-h-screen bg-white font-sans">
       {/* Header */}
       <header className="flex justify-between items-center p-5 sm:px-20 px-0">
-        <div className="text-2xl font-bold text-gray-800 sm:p-0 pl-3">
+        <div className="sm:text-2xl text-xl font-bold text-gray-800 sm:p-0 pl-3 flex items-center gap-1 sm:gap-2">
+          <img className="sm:w-7 sm:h-7 w-5 h-5" src="/shopping-bag.png" alt="" />
           BagStore
         </div>
         <nav className="space-x-4">
