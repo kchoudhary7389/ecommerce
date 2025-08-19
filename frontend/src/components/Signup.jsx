@@ -22,22 +22,18 @@ const Signup = () => {
       password,
       contactno,
     };
-    // console.log(userData);
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/users/register`,
         userData
       );
-      console.log(response);
       if (response.status === 200) {
         const data = response.data;
         setUserData(data.user);
-        console.log(userData);
         localStorage.setItem("token", data.token);
         navigate("/home");
       }
     } catch (error) {
-      console.log(error);
       if (error.response) {
         setError(
           error.response.data.message || error.response.data.errors[0].msg
@@ -49,8 +45,8 @@ const Signup = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
-      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 sm:px-4 px-2">
+      <div className="w-full max-w-md bg-white sm:p-8 p-3 rounded-lg shadow-md">
         {error && (
           <div className="bg-red-500 text-white text-center rounded-lg p-1 mb-4">
             {error}

@@ -52,14 +52,13 @@ const ChangePassword = () => {
       setNewPass("");
       setConfirmPass("");
     } catch (err) {
-      console.log(err);
       setMessage(err.response?.data?.message || "Something went wrong");
     }
   };
 
   return (
     <div className="flex items-center justify-center w-full h-screen">
-      <div className=" mt-10 p-6 w-1/3 rounded-xl shadow-lg bg-white">
+      <div className=" mt-10 p-6 sm:w-1/3 w-full rounded-xl shadow-lg bg-white">
         <div className="flex items-center justify-between mb-4">
           <Link className="flex items-center gap-1 text-sm " to="/home">
             <span>
@@ -67,7 +66,7 @@ const ChangePassword = () => {
             </span>
             Back to Home
           </Link>
-          <h2 className="text-xl font-bold  flex items-center gap-2">
+          <h2 className="sm:text-xl text-base font-bold  flex items-center gap-2">
             <MdPassword size={22} /> Change Password
           </h2>
         </div>
@@ -92,7 +91,7 @@ const ChangePassword = () => {
               value={currentPass}
               onChange={(e) => setCurrentPass(e.target.value)}
               placeholder="Current Password"
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2"
+              className="w-full px-4 sm:py-2 py-1  border rounded-md focus:outline-none focus:ring-2"
             />
             <span
               onClick={() => toggleShow("current")}
@@ -109,7 +108,7 @@ const ChangePassword = () => {
               value={newPass}
               onChange={(e) => setNewPass(e.target.value)}
               placeholder="New Password"
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2"
+              className="w-full px-4 sm:py-2 py-1  border rounded-md focus:outline-none focus:ring-2"
             />
             <span
               onClick={() => toggleShow("new")}
@@ -127,7 +126,7 @@ const ChangePassword = () => {
               value={confirmPass}
               onChange={(e) => setConfirmPass(e.target.value)}
               placeholder="Confirm New Password"
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2"
+              className="w-full px-4 sm:py-2 py-1  border rounded-md focus:outline-none focus:ring-2"
             />
             <span
               onClick={() => toggleShow("confirm")}

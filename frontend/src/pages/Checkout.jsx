@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { FaArrowCircleLeft } from "react-icons/fa";
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -39,11 +40,14 @@ const Checkout = () => {
 
     const fetchPreviousOrders = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}api/order`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
+        const response = await axios.get(
+          `${import.meta.env.VITE_BASE_URL}/api/order`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
 
         const uniqueAddressesMap = new Map();
         response.data.orders.forEach((order) => {
@@ -59,7 +63,6 @@ const Checkout = () => {
         const uniqueAddresses = Array.from(uniqueAddressesMap.values());
         setPreviousOrders(uniqueAddresses);
       } catch (err) {
-        console.error("Failed to fetch previous orders:", err);
         setError(
           err.response?.data?.message || "Failed to fetch previous orders"
         );
@@ -97,7 +100,7 @@ const Checkout = () => {
     try {
       // Create the order
       const orderResponse = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}api/orders`,
+        `${import.meta.env.VITE_BASE_URL}/api/orders`,
         {
           shippingAddress: {
             address,
@@ -123,12 +126,10 @@ const Checkout = () => {
           });
           navigate("/order-success");
         } catch (clearCartError) {
-          console.error("Error clearing cart:", clearCartError);
           navigate("/order-success");
         }
       }
     } catch (err) {
-      console.error("Order creation error:", err);
       setError(
         err.response?.data?.message ||
           "Failed to create order. Please try again."
@@ -191,8 +192,6 @@ const Checkout = () => {
             );
             navigate("/order-success");
           } catch (err) {
-            console.log(err);
-            console.error("Payment verification failed:");
             setError("Payment verification failed. Please try again.");
           }
         },
@@ -209,7 +208,6 @@ const Checkout = () => {
       const rzp = new window.Razorpay(options);
       rzp.open();
     } catch (err) {
-      console.error("Order error:", err);
       setError(
         err.response?.data?.message ||
           "Failed to initiate payment. Please try again."
@@ -251,7 +249,18 @@ const Checkout = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Shipping Address Form */}
           <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-2xl font-semibold mb-6">Shipping Address</h2>
+            <div className="flex items-center justify-between mb-3">
+          <Link
+            className="flex items-center gap-1 text-sm sm:text-lg "
+            to="/cart"
+          >
+            <span>
+              <FaArrowCircleLeft />
+            </span>
+            Back to Cart
+          </Link>
+        </div>
+            <h2 className="sm:text-2xl text-lg font-semibold mb-6">Shipping Address</h2>
 
             {/* Previous Addresses Dropdown */}
             {previousOrders.length > 0 && (
@@ -262,7 +271,7 @@ const Checkout = () => {
                 <select
                   value={selectedAddressId}
                   onChange={(e) => handleAddressSelect(e.target.value)}
-                  className="mt-1 block w-full rounded-md py-2 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  className="mt-1 block w-full rounded-md py-2 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-base text-sm"
                 >
                   <option value="">Select an address</option>
                   {previousOrders.map((order) => (
@@ -277,7 +286,7 @@ const Checkout = () => {
             )}
 
             <form onSubmit={handleSubmit}>
-              <div className="space-y-4">
+              <div className="sm:space-y-4 space-y-2">
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
                     Address
@@ -286,7 +295,7 @@ const Checkout = () => {
                     type="text"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
-                    className="mt-1 block w-full rounded-md py-2 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    className="mt-1 block w-full rounded-md py-2 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-base text-sm"
                     required
                   />
                 </div>
@@ -298,7 +307,7 @@ const Checkout = () => {
                     type="text"
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
-                    className="mt-1 block w-full rounded-md py-2 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    className="mt-1 block w-full rounded-md py-2 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-base text-sm "
                     required
                   />
                 </div>
@@ -310,7 +319,7 @@ const Checkout = () => {
                     type="text"
                     value={state}
                     onChange={(e) => setState(e.target.value)}
-                    className="mt-1 block w-full rounded-md py-2 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    className="mt-1 block w-full rounded-md py-2 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-base text-sm"
                     required
                   />
                 </div>
@@ -322,7 +331,7 @@ const Checkout = () => {
                     type="text"
                     value={country}
                     onChange={(e) => setCountry(e.target.value)}
-                    className="mt-1 block w-full rounded-md py-2 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    className="mt-1 block w-full rounded-md py-2 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-base text-sm"
                     required
                   />
                 </div>
@@ -334,7 +343,7 @@ const Checkout = () => {
                     type="text"
                     value={pinCode}
                     onChange={(e) => setPinCode(e.target.value)}
-                    className="mt-1 block w-full rounded-md py-2 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    className="mt-1 block w-full rounded-md py-2 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-base text-sm"
                     required
                   />
                 </div>
@@ -348,7 +357,7 @@ const Checkout = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="mt-6 w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 cursor-pointer disabled:opacity-50"
+                  className="mt-6 w-full bg-blue-600 text-white sm:py-2 sm:px-4 py-1 px-2 rounded-md hover:bg-blue-700 cursor-pointer disabled:opacity-50 sm:text-base text-sm"
                 >
                   {loading ? "Processing..." : "Pay online"}
                 </button>
@@ -356,7 +365,7 @@ const Checkout = () => {
                   type="submit"
                   disabled={loading}
                   onClick={cashOnDeliverySubmit}
-                  className="mt-6 w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 cursor-pointer disabled:opacity-50"
+                  className="mt-6 w-full bg-blue-600 text-white sm:py-2 sm:px-4 py-1 px-2 rounded-md hover:bg-blue-700 cursor-pointer disabled:opacity-50 sm:text-base text-sm"
                 >
                   {loading ? "Processing..." : "Cash on Delivery"}
                 </button>
@@ -366,7 +375,7 @@ const Checkout = () => {
 
           {/* Order Summary */}
           <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-2xl font-semibold mb-6">Order Summary</h2>
+            <h2 className="sm:text-2xl text-lg font-semibold mb-6">Order Summary</h2>
             <div className="space-y-4">
               {cart.items.map((item) => (
                 <div
@@ -380,8 +389,8 @@ const Checkout = () => {
                   />
                   <div className="flex-1">
                     <h3 className="font-medium">{item.product.name}</h3>
-                    <p className="text-gray-600">Quantity: {item.quantity}</p>
-                    <p className="text-gray-600">
+                    <p className="text-gray-600 sm:text-base text-sm">Quantity: {item.quantity}</p>
+                    <p className="text-gray-600 sm:text-base text-sm">
                       Price: ₹{item.product.price}
                     </p>
                   </div>
@@ -391,7 +400,7 @@ const Checkout = () => {
                 </div>
               ))}
               <div className="border-t pt-4 mt-4">
-                <div className="flex justify-between text-lg font-semibold">
+                <div className="flex justify-between sm:text-lg text-base font-semibold">
                   <span>Total:</span>
                   <span>₹{calculateTotal()}</span>
                 </div>
@@ -401,7 +410,7 @@ const Checkout = () => {
                   <h3 className="font-medium text-green-800 mb-2">
                     Available Payment Methods
                   </h3>
-                  <ul className="text-gray-700 list-disc pl-5 space-y-1">
+                  <ul className="text-gray-700 list-disc pl-5 space-y-1 sm:text-base text-sm">
                     <li>UPI (Google Pay, PhonePe, Paytm, etc.)</li>
                     <li>QR Code Scan</li>
                     <li>Net Banking (All Major Banks Supported)</li>
@@ -412,8 +421,8 @@ const Checkout = () => {
                   <h3 className="font-medium text-gray-800 mb-2">
                     More Coming Soon
                   </h3>
-                  <p className="text-gray-700">
-                    We’re constantly improving your payment experience. Support
+                  <p className="text-gray-700 text-sm sm:text-base">
+                    We're constantly improving your payment experience. Support
                     for debit/credit cards and EMI options is coming soon!
                   </p>
                 </div>

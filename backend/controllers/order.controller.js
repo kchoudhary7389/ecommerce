@@ -112,7 +112,6 @@ const getAllOrders = async (req, res) => {
 
     res.status(200).json({ orders: ordersWithBase64Image });
   } catch (error) {
-    console.log(error);
     res
       .status(500)
       .json({ message: "Error fetching orders", error: error.message });
@@ -125,6 +124,7 @@ const getOrders = async (req, res) => {
       .populate("items.product", "name image")
       .populate("user", "name email")
       .sort({ createdAt: -1 });
+
 
     if (!orders || orders.length === 0) {
       return res.status(401).json({ message: "Orders not found" });
@@ -148,7 +148,6 @@ const getOrders = async (req, res) => {
 
     res.status(200).json({ orders: ordersWithBase64Image });
   } catch (error) {
-    console.log(error);
     res
       .status(500)
       .json({ message: "Error fetching orders", error: error.message });
@@ -247,7 +246,6 @@ const cancelOrder = async (req, res) => {
       order,
     });
   } catch (error) {
-    console.log(error);
     res.status(500).json({
       message: "Error cancelling order",
       error: error.message,
@@ -367,7 +365,6 @@ const verifyRazorpay = async (req, res) => {
 
     res.status(200).json({ message: "Payment verified and order placed" });
   } catch (error) {
-    console.error("Verification error:", error);
     res.status(500).json({ message: "Server error during payment verification" });
   }
 }

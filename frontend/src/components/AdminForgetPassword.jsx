@@ -22,21 +22,17 @@ function AdminForgetPassword() {
       newPassword: password,
       contactno,
     };
-    // console.log(userData);
     if (password === confirmPassword) {
       try {
         const response = await axios.post(
           `${import.meta.env.VITE_BASE_URL}/admin/forgetpassword`,
           userData
         );
-        console.log(response);
         if (response.status === 200) {
           const data = response.data;
-          console.log(userData);
           setMessage(data.message);
         }
       } catch (error) {
-        console.log(error);
         if (error.response) {
           setError(
             error.response.data.message || error.response.data.errors[0].msg
@@ -51,8 +47,8 @@ function AdminForgetPassword() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
-      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 sm:px-4 px-2">
+      <div className="w-full max-w-md bg-white sm:p-8 p-4 rounded-lg shadow-md">
         {error && (
           <div className="bg-red-500 text-white text-center rounded-lg p-1 mb-4">
             {error}
@@ -63,8 +59,8 @@ function AdminForgetPassword() {
             {message}
           </div>
         )}
-        <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
-          Password Recovery
+        <h2 className="text-xl font-bold text-center mb-6 text-gray-800">
+          Admin Password Recovery
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <input

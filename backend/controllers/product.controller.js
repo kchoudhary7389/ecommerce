@@ -139,7 +139,6 @@ exports.giveRating = async (req, res) => {
     if (!product) {
       return res.status(401).json({ message: "Product not found" });
     }
-    console.log(product);
     const totalRating = product.ratings * product.numRatings;
     const newTotalRating = totalRating + rating;
     product.numRatings = product.numRatings + 1;
@@ -153,7 +152,6 @@ exports.giveRating = async (req, res) => {
       numRatings: product.numRatings,
     });
   } catch (error) {
-    console.log(error);
     return res.status(400).json({ message: error.message });
   }
 };

@@ -70,7 +70,6 @@ const userLogout = async (req, res, next) => {
     res.clearCookie("token");
     return res.status(200).json({ message: "Logout successfully" });
   } catch (error) {
-    console.log(error);
     return res.status(400).json({ message: error.message });
   }
 };
@@ -107,7 +106,6 @@ const userChangePassword = async (req, res, next) => {
 
     return res.status(200).json({ message: "Password changed successfully" });
   } catch (error) {
-    console.log(error);
     return res.status(400).json({ message: error.message });
   }
 };
@@ -146,7 +144,6 @@ const forgetPassword = async (req, res, next) => {
       message: "Password changed successfully",
     });
   } catch (error) {
-    console.log(error);
     return res.status(400).json({ message: error.message });
   }
 };
@@ -186,7 +183,6 @@ const updateUserProfile = async (req, res, next) => {
 
     return res.status(200).json({ user });
   } catch (error) {
-    console.log(error);
     return res.status(400).json({ message: error.message });
   }
 };

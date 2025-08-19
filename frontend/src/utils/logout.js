@@ -15,7 +15,7 @@ export const adminLogout = () => {
       })
       .then((res) => {
         if (res.status === 200) {
-          navigate("/admin-login");
+          navigate("/");
           setAdminData(null);
           localStorage.removeItem("token");
         }
@@ -34,7 +34,7 @@ export const userLogout = () => {
       })
       .then((res) => {
         if (res.status === 200) {
-          navigate("/login");
+          navigate("/");
           setUserData(null);
           localStorage.removeItem("token");
         }

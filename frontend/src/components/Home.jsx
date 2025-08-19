@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { motion } from "framer-motion";
+
 import {
   FaSearch,
   FaShoppingCart,
   FaUser,
   FaSignOutAlt,
   FaTimes,
-  FaKey 
+  FaKey,
 } from "react-icons/fa";
 import { userLogout } from "../utils/logout";
 import { userDataContext } from "../context/userContext";
@@ -44,7 +46,6 @@ function Home() {
 
       setLoading(false);
     } catch (error) {
-      console.error("Error fetching products:", error);
       setLoading(false);
     }
   };
@@ -109,7 +110,6 @@ function Home() {
         setRatingMessage("");
       }, 2000);
     } catch (error) {
-      console.error(error);
     }
   };
 
@@ -118,9 +118,9 @@ function Home() {
       {/* Product Modal */}
       {showProductModal && selectedProduct && (
         <div className="fixed inset-0 bg-black/20 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white p-6 rounded-lg shadow-xl max-w-2xl w-full h-screen sm:max-h-[90vh]">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold">Product Details</h2>
+              <h2 className="sm:text-xl text-lg font-bold">Product Details</h2>
               <button
                 onClick={() => setShowProductModal(false)}
                 className="text-gray-500 cursor-pointer text-2xl hover:text-gray-700"
@@ -128,22 +128,22 @@ function Home() {
                 <FaTimes />
               </button>
             </div>
-            <div className="space-y-4">
+            <div className="space-y-2">
               <div className="flex justify-center">
                 <img
                   src={`data:image/jpeg;base64,${selectedProduct.image}`}
                   alt={selectedProduct.name}
-                  className="w-64 h-64 object-contain"
+                  className="sm:w-52 sm:h-52 w-36 h-36 object-contain"
                 />
               </div>
               <div className="border-b pb-4">
-                <h3 className="text-lg font-semibold mb-2">
+                <h3 className="sm:text-lg text-sm font-semibold mb-2">
                   {selectedProduct.name}
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-gray-600 sm:text-lg text-sm">
                   Category: {selectedProduct.category}
                 </p>
-                <p className="text-xl font-bold text-gray-900 mt-2">
+                <p className="sm:text-xl text-lg font-bold text-gray-900 mt-2">
                   ₹{selectedProduct.price}
                 </p>
               </div>
@@ -171,7 +171,6 @@ function Home() {
                     value={rating}
                     onChange={(e) => setRating(Number(e.target.value))}
                   >
-                    <option value="">Select</option>
                     {[1, 2, 3, 4, 5].map((num) => (
                       <option key={num} value={num}>
                         {num} Star{num > 1 && "s"}
@@ -223,11 +222,11 @@ function Home() {
       )}
 
       {/* Header */}
-      <header className="bg-white shadow">
+      <header className="bg-white hidden sm:block shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <Link to="/home" className="text-2xl font-bold text-gray-800">
-              E-Commerce
+              BagStore
             </Link>
             <div className="flex items-center space-x-4">
               <div className="relative">
@@ -246,7 +245,10 @@ function Home() {
               <Link to="/profile" className="text-gray-600 hover:text-gray-800">
                 <FaUser className="text-2xl" />
               </Link>
-              <Link to="/change-password" className="text-gray-600 hover:text-gray-800">
+              <Link
+                to="/change-password"
+                className="text-gray-600 hover:text-gray-800"
+              >
                 <FaKey className="text-2xl" />
               </Link>
               <button
@@ -259,22 +261,64 @@ function Home() {
           </div>
         </div>
       </header>
+      <header className=" block sm:hidden">
+        <div className="max-w-7xl mx-auto z-20 px-4 sm:px-6 lg:px-8 shadow bg-white fixed w-full ">
+          <div className="flex justify-between items-center py-4">
+            <Link
+              to="/home"
+              className="sm:text-2xl text-lg font-bold text-gray-800"
+            >
+              BagStore
+            </Link>
+            <div className="flex items-center space-x-4">
+              <Link to="/cart" className="text-gray-600 hover:text-gray-800">
+                <FaShoppingCart className="sm:text-2xl text-lg" />
+              </Link>
+              <Link to="/profile" className="text-gray-600 hover:text-gray-800">
+                <FaUser className="sm:text-2xl text-lg" />
+              </Link>
+              <Link
+                to="/change-password"
+                className="text-gray-600 hover:text-gray-800"
+              >
+                <FaKey className="sm:text-2xl text-lg" />
+              </Link>
+              <button
+                onClick={logoutHandler}
+                className="text-gray-600 cursor-pointer hover:text-gray-800"
+              >
+                <FaSignOutAlt className="sm:text-2xl text-lg" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
 
       {message && (
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 rounded text-xl bg-green-500 text-white px-4 py-2">
+        <div className="fixed sm:top-20 top-7 z-30 left-1/2 -translate-x-1/2 rounded text-xl bg-green-500 text-white px-4 py-2">
           {message}
         </div>
       )}
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div className="relative mt-16 mb-5 sm:hidden z-10">
+          <input
+            type="text"
+            placeholder="Search products..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10 pr-4 sm:py-2 py-1 border rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-fit placeholder:text-sm"
+          />
+          <FaSearch className="absolute sm:left-3 left-3 top-2.5 sm:top-3 text-gray-400 z-10" />
+        </div>
         {/* Filters */}
         <div className="mb-8 flex flex-wrap items-center gap-4">
           {/* Category Filter */}
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+            className="px-4 sm:py-2 py-1.5 text-sm sm:text-base sm:w-fit w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
           >
             <option value="all">All Categories</option>
             {categories.map((category) => (
@@ -285,27 +329,44 @@ function Home() {
           </select>
 
           {/* Price Filter */}
-          <input
-            type="number"
-            placeholder="Min Price"
-            value={minPrice}
-            onChange={(e) => setMinPrice(e.target.value)}
-            className="px-4 py-2 border rounded-lg w-32 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <input
-            type="number"
-            placeholder="Max Price"
-            value={maxPrice}
-            onChange={(e) => setMaxPrice(e.target.value)}
-            className="px-4 py-2 border rounded-lg w-32 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          <div className="flex items-center  gap-4 sm:justify-start justify-between w-full sm:w-fit">
+            <input
+              type="number"
+              placeholder="Min Price"
+              value={minPrice}
+              onChange={(e) => setMinPrice(e.target.value)}
+              className="px-4 sm:py-2 sm:text-base text-sm py-1 border rounded-lg w-1/2 sm:w-32 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <input
+              type="number"
+              placeholder="Max Price"
+              value={maxPrice}
+              onChange={(e) => setMaxPrice(e.target.value)}
+              className="px-4 sm:py-2 py-1 sm:text-base text-sm border rounded-lg w-1/2 sm:w-32 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
         </div>
 
         {/* Products Grid */}
         {loading ? (
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading products...</p>
+          <div className="h-screen flex items-center justify-center bg-white">
+            <div className="flex space-x-2">
+              <motion.span
+                className="w-4 h-4 bg-gray-800 rounded-full"
+                animate={{ y: [0, -15, 0] }}
+                transition={{ duration: 0.6, repeat: Infinity }}
+              />
+              <motion.span
+                className="w-4 h-4 bg-gray-800 rounded-full"
+                animate={{ y: [0, -15, 0] }}
+                transition={{ duration: 0.6, repeat: Infinity, delay: 0.2 }}
+              />
+              <motion.span
+                className="w-4 h-4 bg-gray-800 rounded-full"
+                animate={{ y: [0, -15, 0] }}
+                transition={{ duration: 0.6, repeat: Infinity, delay: 0.4 }}
+              />
+            </div>
           </div>
         ) : filteredProducts.length === 0 ? (
           <div className="text-center py-12">

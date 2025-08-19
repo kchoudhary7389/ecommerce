@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { motion } from "framer-motion";
 import {
   FaBox,
   FaChartLine,
@@ -10,6 +11,8 @@ import {
   FaPlus,
   FaEdit,
   FaTrash,
+    FaBars,
+  FaTimes,
 } from "react-icons/fa";
 import { adminLogout } from "../utils/logout";
 
@@ -20,6 +23,8 @@ function ManageUsers() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
   const logoutHandler = adminLogout();
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+  
 
   useEffect(() => {
     // Fetch products from your backend
@@ -38,7 +43,6 @@ function ManageUsers() {
         setUsers(data.users);
         setLoading(false);
       } catch (error) {
-        console.error("Error fetching users:", error);
         setLoading(false);
       }
     };
@@ -62,7 +66,6 @@ function ManageUsers() {
           },
         }
       );
-      console.log(response.data);
       setShowDeleteModal(false);
       setProductToDelete(null);
       // Refresh products list
@@ -102,53 +105,71 @@ function ManageUsers() {
         </div>
       )}
       {/* Sidebar */}
-      <div className="w-64 bg-white shadow-lg">
-        <div className="p-4">
-          <h2 className="text-2xl font-bold text-gray-800">Admin Panel</h2>
-        </div>
-        <nav className="mt-6">
-          <Link
-            to="/admin/dashboard"
-            className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
-          >
-            <FaChartLine className="mr-3" />
-            Dashboard
-          </Link>
-          <Link
-            to="/admin/products"
-            className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
-          >
-            <FaBox className="mr-3" />
-            Products
-          </Link>
-          <Link
-            to="/admin/users"
-            className="flex items-center px-4 py-2 text-gray-700 bg-gray-100"
-          >
-            <FaUsers className="mr-3" />
-            Users
-          </Link>
-          <Link
-            to="/admin/orders"
-            className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
-          >
-            <FaShoppingCart className="mr-3" />
-            Orders
-          </Link>
-          <button
-            onClick={logoutHandler}
-            className="flex items-center cursor-pointer w-full px-4 py-2 mt-4 text-gray-700 hover:bg-gray-100"
-          >
-            <FaSignOutAlt className="mr-3" />
-            Logout
-          </button>
-        </nav>
-      </div>
+    <>
+         {/* Mobile Top Navbar */}
+         <div className="md:hidden fixed top-0 left-0 w-full bg-white shadow z-20 flex items-center justify-between px-4 py-3">
+           <h2 className="text-xl font-bold text-gray-800">Admin Panel</h2>
+           <button
+             className="text-gray-700"
+             onClick={() => setSidebarOpen(!sidebarOpen)}
+           >
+             {sidebarOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
+           </button>
+         </div>
+   
+         {/* Sidebar */}
+         <div
+           className={`fixed md:static top-0 left-0 h-full w-64 bg-white shadow-lg z-30 transform 
+           ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} 
+           transition-transform duration-300 md:translate-x-0`}
+         >
+           <div className="p-4 hidden md:block">
+             <h2 className="text-2xl font-bold text-gray-800">Admin Panel</h2>
+           </div>
+           <nav className="mt-6">
+             <Link
+               to="/admin/dashboard"
+               className="flex items-center px-4 py-2 text-gray-700 bg-gray-100"
+             >
+               <FaChartLine className="mr-3" />
+               Dashboard
+             </Link>
+             <Link
+               to="/admin/products"
+               className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
+             >
+               <FaBox className="mr-3" />
+               Products
+             </Link>
+             <Link
+               to="/admin/users"
+               className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
+             >
+               <FaUsers className="mr-3" />
+               Users
+             </Link>
+             <Link
+               to="/admin/orders"
+               className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
+             >
+               <FaShoppingCart className="mr-3" />
+               Orders
+             </Link>
+             <button
+               onClick={logoutHandler}
+               className="flex items-center cursor-pointer w-full px-4 py-2 mt-4 text-gray-700 hover:bg-gray-100"
+             >
+               <FaSignOutAlt className="mr-3" />
+               Logout
+             </button>
+           </nav>
+         </div>
+       </>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-auto">
-        <div className="p-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-8">
+      <div className="flex-1 overflow-auto mt-10">
+        <div className="sm:p-8 p-4">
+          <h1 className="sm:text-3xl text-2xl text-center sm:text-start font-bold text-gray-800 mb-8">
             Users Overview
           </h1>
 
@@ -160,7 +181,33 @@ function ManageUsers() {
               </div>
 
               {loading ? (
-                <div className="text-center py-8">Loading Users...</div>
+                  <div className="h-[20vh] flex items-center justify-center ">
+                  <div className="flex space-x-2">
+                    <motion.span
+                      className="w-4 h-4 bg-gray-800 rounded-full"
+                      animate={{ y: [0, -15, 0] }}
+                      transition={{ duration: 0.6, repeat: Infinity }}
+                    />
+                    <motion.span
+                      className="w-4 h-4 bg-gray-800 rounded-full"
+                      animate={{ y: [0, -15, 0] }}
+                      transition={{
+                        duration: 0.6,
+                        repeat: Infinity,
+                        delay: 0.2,
+                      }}
+                    />
+                    <motion.span
+                      className="w-4 h-4 bg-gray-800 rounded-full"
+                      animate={{ y: [0, -15, 0] }}
+                      transition={{
+                        duration: 0.6,
+                        repeat: Infinity,
+                        delay: 0.4,
+                      }}
+                    />
+                  </div>
+                </div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="min-w-full">

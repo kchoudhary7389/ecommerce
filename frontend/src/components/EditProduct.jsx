@@ -60,7 +60,6 @@ function EditProduct() {
           setImage(previewImage);
         }
       } catch (error) {
-        console.error("Error fetching product:", error);
         setError("Failed to fetch product details");
       }
     };
@@ -98,17 +97,16 @@ function EditProduct() {
         navigate("/admin/dashboard");
       }
     } catch (error) {
-      console.log(error);
       setError(error.response?.data?.message || "Failed to create product");
     } finally {
       setLoading(false);
     }
   };
   return (
-    <div className="min-h-screen  py-8 px-4">
+    <div className="min-h-screen  py-8 sm:px-4 px-0">
       <div className="max-w-3xl mx-auto">
-        <div className="bg-white rounded-lg p-6">
-          <div className="flex items-center mb-6">
+        <div className="bg-white rounded-lg sm:p-6 p-4">
+          <div className="flex items-center flex-col sm:flex-row gap-2 mb-6">
             <button
               onClick={() => navigate("/admin/dashboard")}
               className="flex items-center text-gray-600 hover:text-gray-800 mr-4"
@@ -235,7 +233,7 @@ function EditProduct() {
               <button
                 type="submit"
                 disabled={loading}
-                className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 cursor-pointer focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
+                className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 cursor-pointer focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 w-full sm:w-fit"
               >
                 {loading ? "Creating..." : "Edit Product"}
               </button>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { motion } from "framer-motion";
 import {
   FaBox,
   FaChartLine,
@@ -11,6 +12,7 @@ import {
   FaTrash,
   FaInfoCircle,
   FaTimes,
+    FaBars,
 } from "react-icons/fa";
 import { adminLogout } from "../utils/logout";
 
@@ -24,6 +26,8 @@ function ManageOrders() {
   const [newStatus, setNewStatus] = useState("");
   const [newPaymentStatus, setNewPaymentStatus] = useState("");
   const logoutHandler = adminLogout();
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -38,10 +42,8 @@ function ManageOrders() {
           }
         );
         setOrders(response.data.orders);
-        console.log(response.data.orders[0].user.name);
         setLoading(false);
       } catch (error) {
-        console.error("Error fetching orders:", error);
         setLoading(false);
       }
     };
@@ -141,9 +143,9 @@ function ManageOrders() {
   return (
     <div className="flex h-screen bg-gray-100">
       {showStatusModal && (
-        <div className="fixed inset-0 bg-black/20 bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg shadow-xl">
-            <h2 className="text-xl font-bold mb-4">Update Order Status</h2>
+        <div className="fixed inset-0 bg-black/20 sm:px-0 px-4 bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg shadow-xl w-full sm:w-fit">
+            <h2 className="sm:text-xl text-lg font-bold mb-4">Update Order Status</h2>
             <select
               value={newStatus}
               onChange={(e) => setNewStatus(e.target.value)}
@@ -173,9 +175,9 @@ function ManageOrders() {
       )}
 
       {showPaymentModal && (
-        <div className="fixed inset-0 bg-black/20 bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg shadow-xl">
-            <h2 className="text-xl font-bold mb-4">Update Payment Status</h2>
+        <div className="fixed inset-0 bg-black/20 bg-opacity-50 flex px-4 sm:px-0 items-center justify-center">
+          <div className="bg-white p-6 rounded-lg shadow-xl w-full sm:w-fit ">
+            <h2 className="sm:text-xl text-lg font-bold mb-4">Update Payment Status</h2>
             <select
               value={newPaymentStatus}
               onChange={(e) => setNewPaymentStatus(e.target.value)}
@@ -206,7 +208,7 @@ function ManageOrders() {
       {/* Order Details Modal */}
       {showDetailsModal && selectedOrder && (
         <div className="fixed inset-0 bg-black/20 bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+          <div className="bg-white p-6 rounded-lg shadow-xl max-w-2xl w-full sm:max-h-[80vh] overflow-y-auto h-screen">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold">Order Details</h2>
               <button
@@ -331,14 +333,31 @@ function ManageOrders() {
       )}
 
       {/* Sidebar */}
-      <div className="w-64 bg-white shadow-lg">
-        <div className="p-4">
+     <>
+      {/* Mobile Top Navbar */}
+      <div className="md:hidden fixed top-0 left-0 w-full bg-white shadow z-20 flex items-center justify-between px-4 py-3">
+        <h2 className="text-xl font-bold text-gray-800">Admin Panel</h2>
+        <button
+          className="text-gray-700"
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+        >
+          {sidebarOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
+        </button>
+      </div>
+
+      {/* Sidebar */}
+      <div
+        className={`fixed md:static top-0 left-0 h-full w-64 bg-white shadow-lg z-30 transform 
+        ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} 
+        transition-transform duration-300 md:translate-x-0`}
+      >
+        <div className="p-4 hidden md:block">
           <h2 className="text-2xl font-bold text-gray-800">Admin Panel</h2>
         </div>
         <nav className="mt-6">
           <Link
             to="/admin/dashboard"
-            className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
+            className="flex items-center px-4 py-2 text-gray-700 bg-gray-100"
           >
             <FaChartLine className="mr-3" />
             Dashboard
@@ -359,7 +378,7 @@ function ManageOrders() {
           </Link>
           <Link
             to="/admin/orders"
-            className="flex items-center px-4 py-2 text-gray-700 bg-gray-100"
+            className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
           >
             <FaShoppingCart className="mr-3" />
             Orders
@@ -373,16 +392,43 @@ function ManageOrders() {
           </button>
         </nav>
       </div>
+    </>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-auto">
-        <div className="p-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-8">
+      <div className="flex-1 overflow-auto mt-10">
+        <div className="p-4 sm:p-8">
+          <h1 className="sm:text-3xl text-2xl text-center sm:text-start font-bold text-gray-800 mb-8">
             Orders Management
           </h1>
 
           {loading ? (
-            <div className="text-center py-8">Loading orders...</div>
+                <div className="h-[20vh] flex items-center justify-center ">
+                  <div className="flex space-x-2">
+                    <motion.span
+                      className="w-4 h-4 bg-gray-800 rounded-full"
+                      animate={{ y: [0, -15, 0] }}
+                      transition={{ duration: 0.6, repeat: Infinity }}
+                    />
+                    <motion.span
+                      className="w-4 h-4 bg-gray-800 rounded-full"
+                      animate={{ y: [0, -15, 0] }}
+                      transition={{
+                        duration: 0.6,
+                        repeat: Infinity,
+                        delay: 0.2,
+                      }}
+                    />
+                    <motion.span
+                      className="w-4 h-4 bg-gray-800 rounded-full"
+                      animate={{ y: [0, -15, 0] }}
+                      transition={{
+                        duration: 0.6,
+                        repeat: Infinity,
+                        delay: 0.4,
+                      }}
+                    />
+                  </div>
+                </div>
           ) : (
             <div className="bg-white rounded-lg shadow">
               <div className="p-6">

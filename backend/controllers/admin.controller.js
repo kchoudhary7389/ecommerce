@@ -32,10 +32,11 @@ const adminRegister = async (req, res, next) => {
 
   return res.status(200).json({ token, admin });
 };
+
 const adminLogin = async (req, res, next) => {
   const error = validationResult(req);
   if (!error.isEmpty()) {
-    return res.status(401).json({ message: error.array() });
+    return res.status(401).json({ errors: error.array() });
   }
 
   const { email, password } = req.body;
@@ -56,23 +57,24 @@ const adminLogin = async (req, res, next) => {
   }
 
   const token = await admin.generateToken();
-  console.log(token);
   res.cookie("token", token);
 
   return res.status(200).json({ token, admin });
 };
+
 const getAdminProfile = async (req, res, next) => {
   return res.status(200).json({ admin: req.admin });
 };
+
 const adminLogout = async (req, res, next) => {
   try {
     res.clearCookie("token");
     return res.status(200).json({ message: "Logout successfully" });
   } catch (error) {
-    console.log(error);
     return res.status(400).json({ message: error.message });
   }
 };
+
 const adminChangePassword = async (req, res, next) => {
   try {
     const error = validationResult(req);
@@ -105,7 +107,6 @@ const adminChangePassword = async (req, res, next) => {
 
     return res.status(200).json({ message: "Password changed successfully" });
   } catch (error) {
-    console.log(error);
     return res.status(400).json({ message: error.message });
   }
 };
@@ -144,7 +145,6 @@ const adminForgetPassword = async (req, res, next) => {
       message: "Password reset successfully",
     });
   } catch (error) {
-    console.log(error);
     return res.status(400).json({ message: error.message });
   }
 };
@@ -162,7 +162,6 @@ const getAllUsers = async (req, res, next) => {
       users: users,
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ message: error.message });
   }
 };

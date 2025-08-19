@@ -21,23 +21,23 @@ const OrderSuccess = () => {
             />
           </svg>
         </div>
-        <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+        <h2 className="sm:text-2xl text-lg font-semibold text-gray-900 mb-4 ">
           Order Placed Successfully!
         </h2>
-        <p className="text-gray-600 mb-8">
+        <p className="text-gray-600 mb-8 sm:text-base text-sm">
           Thank you for your purchase. Your order has been received and is being
           processed.
         </p>
         <div className="space-y-4">
           <button
             onClick={() => navigate("/home")}
-            className="w-full cursor-pointer bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
+            className="w-full cursor-pointer bg-blue-600 text-white sm:py-2 sm:px-4 py-1 px-2 sm:text-base text-sm rounded-md hover:bg-blue-700"
           >
             Continue Shopping
           </button>
           <button
             onClick={() => navigate("/profile")}
-            className="w-full cursor-pointer bg-gray-200 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-300"
+            className="w-full cursor-pointer bg-gray-200 text-gray-800 sm:py-2 sm:px-4 py-1 px-2 rounded-md hover:bg-gray-300 sm:text-base text-sm"
           >
             View Orders
           </button>

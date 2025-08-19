@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaTrash, FaMinus, FaPlus, FaArrowCircleLeft } from "react-icons/fa";
 import { MdPassword } from "react-icons/md";
+import { motion } from "framer-motion";
+
 
 function Cart() {
   const [cart, setCart] = useState([]);
@@ -20,7 +22,6 @@ function Cart() {
           },
         }
       );
-      // console.log(response.data.cart.items);
       setCart(response.data.cart.items);
     } catch (error) {
       console.error("Error fetching cart:", error);
@@ -106,24 +107,44 @@ function Cart() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 relative mb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex items-center justify-between mb-8">
-          <Link className="flex items-center gap-1 text-lg " to="/home">
+          <Link
+            className="flex items-center gap-1 text-sm sm:text-lg "
+            to="/home"
+          >
             <span>
               <FaArrowCircleLeft />
             </span>
             Back to Home
           </Link>
-            <h1 className="text-3xl font-bold text-gray-800">Your Cart</h1>
+          <h1 className="sm:text-3xl font-bold text-lg text-gray-800">
+            Your Cart
+          </h1>
         </div>
         {loading ? (
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading cart...</p>
+          <div className="h-screen flex items-center justify-center ">
+            <div className="flex space-x-2">
+              <motion.span
+                className="w-4 h-4 bg-gray-800 rounded-full"
+                animate={{ y: [0, -15, 0] }}
+                transition={{ duration: 0.6, repeat: Infinity }}
+              />
+              <motion.span
+                className="w-4 h-4 bg-gray-800 rounded-full"
+                animate={{ y: [0, -15, 0] }}
+                transition={{ duration: 0.6, repeat: Infinity, delay: 0.2 }}
+              />
+              <motion.span
+                className="w-4 h-4 bg-gray-800 rounded-full"
+                animate={{ y: [0, -15, 0] }}
+                transition={{ duration: 0.6, repeat: Infinity, delay: 0.4 }}
+              />
+            </div>
           </div>
         ) : cart.length === 0 ? (
-          <div className="text-center py-12">
+          <div className="text-center flex items-center justify-center flex-col h-[80vh] py-12">
             <p className="text-gray-600 mb-4">Your cart is empty</p>
             <Link
               to="/home"
@@ -136,12 +157,12 @@ function Cart() {
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
             <div className="p-6">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-semibold text-gray-800">
+                <h2 className="sm:text-xl text-base font-semibold text-gray-800">
                   Cart Items ({cart.length})
                 </h2>
                 <button
                   onClick={clearCart}
-                  className="text-red-500 hover:text-red-600 font-medium"
+                  className="text-red-500 hover:text-red-600 sm:text-base text-sm font-medium"
                 >
                   Clear Cart
                 </button>
@@ -151,9 +172,9 @@ function Cart() {
                 {cart.map((item) => (
                   <div
                     key={item.product._id}
-                    className="flex items-center justify-between p-4 border-b"
+                    className="flex items-center justify-between flex-col sm:flex-row p-4 border-b"
                   >
-                    <div className="flex items-center space-x-4">
+                    <div className="flex items-center sm:justify-start justify-between w-full space-x-4">
                       <div className="w-20 h-20 overflow-hidden rounded">
                         <img
                           src={`data:image/jpeg;base64,${item.product.image}`}
@@ -161,18 +182,20 @@ function Cart() {
                           className="w-full h-full object-contain"
                         />
                       </div>
-                      <div>
-                        <h3 className="text-lg font-medium text-gray-800">
+                      <div className="text-right space-y-1">
+                        <h3 className="sm:text-lg text-base font-medium text-gray-800">
                           {item.product.name}
                         </h3>
-                        <p className="text-gray-600">{item.product.category}</p>
-                        <p className="text-gray-900 font-semibold">
+                        <p className="text-gray-600 sm:text-base text-sm">
+                          {item.product.category}
+                        </p>
+                        <p className="text-gray-900 font-semibold sm:text-base text-sm">
                           ₹{item.product.price}
                         </p>
                       </div>
                     </div>
 
-                    <div className="flex items-center space-x-4">
+                    <div className="flex items-center sm:justify-end justify-between w-full space-x-4">
                       <div className="flex items-center space-x-2">
                         <button
                           onClick={() =>
@@ -204,14 +227,14 @@ function Cart() {
                 ))}
               </div>
 
-              <div className="mt-6 border-t pt-6">
-                <div className="flex justify-between items-center">
-                  <span className="text-xl font-bold text-gray-800">
+              <div className="mt-6 py-3 sm:shadow-none shadow-[0_-4px_10px_rgba(0,0,0,0.5)] px-5 sm:px-0 sm:static fixed bottom-0 w-full left-0 bg-gray-100 sm:bg-white z-10">
+                <div className="flex sm:border-t sm:pt-6 pt-0 sm:flex-row flex-col justify-between items-center space-y-2">
+                  <span className="sm:text-xl text-base font-bold text-gray-800">
                     Total: ₹{getCartTotal()}
                   </span>
                   <button
                     onClick={handleCheckout}
-                    className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-300"
+                    className="bg-blue-500 sm:text-base text-sm w-full sm:w-fit text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-300"
                   >
                     Proceed to Checkout
                   </button>

@@ -13,6 +13,7 @@
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/vite": "^4.1.4",
     "axios": "^1.8.4",
+    "framer-motion": "^12.23.12",
     "razorpay": "^2.9.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

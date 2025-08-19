@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { motion } from "framer-motion";
 import {
   FaBox,
   FaChartLine,
@@ -10,6 +11,8 @@ import {
   FaPlus,
   FaEdit,
   FaTrash,
+  FaBars ,
+  FaTimes 
 } from "react-icons/fa";
 import { adminLogout } from "../utils/logout";
 
@@ -20,6 +23,7 @@ function AdminProducts() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
   const logoutHandler = adminLogout();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     // Fetch products from your backend
@@ -32,7 +36,6 @@ function AdminProducts() {
         setProducts(data.products);
         setLoading(false);
       } catch (error) {
-        console.error("Error fetching products:", error);
         setLoading(false);
       }
     };
@@ -56,7 +59,6 @@ function AdminProducts() {
           },
         }
       );
-      console.log(response.data);
       setShowDeleteModal(false);
       setProductToDelete(null);
       // Refresh products list
@@ -71,7 +73,7 @@ function AdminProducts() {
   return (
     <div className="flex h-screen bg-gray-100">
       {showDeleteModal && (
-        <div className="fixed inset-0 bg-black/20 bg-opacity-50 flex items-center justify-center">
+        <div className="fixed inset-0 bg-black/20 bg-opacity-50 flex items-center justify-center p-4">
           <div className="bg-white p-6 rounded-lg shadow-xl">
             <h2 className="text-xl font-bold mb-4">Confirm Delete</h2>
             <p className="mb-4">
@@ -98,53 +100,70 @@ function AdminProducts() {
         </div>
       )}
       {/* Sidebar */}
-      <div className="w-64 bg-white shadow-lg">
-        <div className="p-4">
-          <h2 className="text-2xl font-bold text-gray-800">Admin Panel</h2>
-        </div>
-        <nav className="mt-6">
-          <Link
-            to="/admin/dashboard"
-            className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
-          >
-            <FaChartLine className="mr-3" />
-            Dashboard
-          </Link>
-          <Link
-            to="/admin/products"
-            className="flex items-center px-4 py-2 text-gray-700 bg-gray-100"
-          >
-            <FaBox className="mr-3" />
-            Products
-          </Link>
-          <Link
-            to="/admin/users"
-            className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
-          >
-            <FaUsers className="mr-3" />
-            Users
-          </Link>
-          <Link
-            to="/admin/orders"
-            className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
-          >
-            <FaShoppingCart className="mr-3" />
-            Orders
-          </Link>
+      <>
+        {/* Mobile Top Navbar */}
+        <div className="md:hidden fixed top-0 left-0 w-full bg-white shadow z-20 flex items-center justify-between px-4 py-3">
+          <h2 className="text-xl font-bold text-gray-800">Admin Panel</h2>
           <button
-            onClick={logoutHandler}
-            className="flex items-center w-full cursor-pointer px-4 py-2 mt-4 text-gray-700 hover:bg-gray-100"
+            className="text-gray-700"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
           >
-            <FaSignOutAlt className="mr-3" />
-            Logout
+            {sidebarOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
           </button>
-        </nav>
-      </div>
+        </div>
 
+        {/* Sidebar */}
+        <div
+          className={`fixed md:static top-0 left-0 h-full w-64 bg-white shadow-lg z-30 transform 
+             ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} 
+             transition-transform duration-300 md:translate-x-0`}
+        >
+          <div className="p-4 hidden md:block">
+            <h2 className="text-2xl font-bold text-gray-800">Admin Panel</h2>
+          </div>
+          <nav className="mt-6">
+            <Link
+              to="/admin/dashboard"
+              className="flex items-center px-4 py-2 text-gray-700 bg-gray-100"
+            >
+              <FaChartLine className="mr-3" />
+              Dashboard
+            </Link>
+            <Link
+              to="/admin/products"
+              className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
+            >
+              <FaBox className="mr-3" />
+              Products
+            </Link>
+            <Link
+              to="/admin/users"
+              className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
+            >
+              <FaUsers className="mr-3" />
+              Users
+            </Link>
+            <Link
+              to="/admin/orders"
+              className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
+            >
+              <FaShoppingCart className="mr-3" />
+              Orders
+            </Link>
+            <button
+              onClick={logoutHandler}
+              className="flex items-center cursor-pointer w-full px-4 py-2 mt-4 text-gray-700 hover:bg-gray-100"
+            >
+              <FaSignOutAlt className="mr-3" />
+              Logout
+            </button>
+          </nav>
+        </div>
+      </>
       {/* Main Content */}
-      <div className="flex-1 overflow-auto">
-        <div className="p-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-8">
+      <div className="flex-1 overflow-auto mt-10">
+        <div className="sm:p-8 p-4">
+          <h1 className="sm:text-3xl text-2xl text-center sm:text-start font-bold text-gray-800 mb-8">
             Products Overview
           </h1>
 
@@ -152,18 +171,44 @@ function AdminProducts() {
           <div className="bg-white rounded-lg shadow">
             <div className="p-6">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-800">Products</h2>
+                <h2 className="sm:text-2xl text-lg font-bold text-gray-800">Products</h2>
                 <Link
                   to="/admin/products/create"
                   className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center hover:bg-blue-700"
                 >
-                  <FaPlus className="mr-2" />
-                  Add Product
+                  <FaPlus className="sm:mr-2" />
+                  <span className="hidden sm:block">Add Product</span>
                 </Link>
               </div>
 
               {loading ? (
-                <div className="text-center py-8">Loading products...</div>
+              <div className="h-[20vh] flex items-center justify-center ">
+                  <div className="flex space-x-2">
+                    <motion.span
+                      className="w-4 h-4 bg-gray-800 rounded-full"
+                      animate={{ y: [0, -15, 0] }}
+                      transition={{ duration: 0.6, repeat: Infinity }}
+                    />
+                    <motion.span
+                      className="w-4 h-4 bg-gray-800 rounded-full"
+                      animate={{ y: [0, -15, 0] }}
+                      transition={{
+                        duration: 0.6,
+                        repeat: Infinity,
+                        delay: 0.2,
+                      }}
+                    />
+                    <motion.span
+                      className="w-4 h-4 bg-gray-800 rounded-full"
+                      animate={{ y: [0, -15, 0] }}
+                      transition={{
+                        duration: 0.6,
+                        repeat: Infinity,
+                        delay: 0.4,
+                      }}
+                    />
+                  </div>
+                </div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="min-w-full">

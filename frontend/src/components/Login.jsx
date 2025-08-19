@@ -9,42 +9,42 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const { userData, setUserData } = useContext(userDataContext);
+  const [loading, setLoading] = useState(false); // <-- new loading state
+  const { setUserData } = useContext(userDataContext);
   const navigate = useNavigate();
 
-  console.log(userData);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const userData = {
-      email,
-      password,
-    };
+    setLoading(true); // start loading when button clicked
+    setError("");
+
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/users/login`,
-        userData
+        { email, password }
       );
       if (response.status === 200) {
         const data = response.data;
         setUserData(data.user);
-        // console.log(userData);
         localStorage.setItem("token", data.token);
         navigate("/home");
       }
     } catch (error) {
-      console.log(error);
       if (error.response) {
         setError(
-          error.response.data.message || error.response.data.errors[0].msg
+          error.response.data.message || error.response.data.errors?.[0]?.msg
         );
       } else {
         setError(error.message);
       }
+    } finally {
+      setLoading(false); // stop loading after response or error
     }
   };
+
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
-      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 sm:px-4 px-2">
+      <div className="w-full max-w-md bg-white sm:p-8 p-3 rounded-lg shadow-md">
         {error && (
           <div className="bg-red-500 text-white text-center rounded-lg p-1 mb-4">
             {error}
@@ -76,11 +76,12 @@ const Login = () => {
             />
             <span
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute top-3 right-3 text-xl"
+              className="absolute top-3 right-3 text-xl cursor-pointer"
             >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </span>
           </div>
+
           <div className="flex justify-between">
             <div className="text-blue-500 text-sm">
               <Link to="/">Back to home</Link>
@@ -92,9 +93,14 @@ const Login = () => {
 
           <button
             type="submit"
-            className="w-full bg-gray-800 text-white py-2 rounded hover:bg-gray-900 transition duration-300 cursor-pointer"
+            disabled={loading} // disable while loading
+            className={`w-full py-2 rounded text-white transition duration-300 cursor-pointer ${
+              loading
+                ? "bg-gray-500 cursor-not-allowed"
+                : "bg-gray-800 hover:bg-gray-900"
+            }`}
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
 
