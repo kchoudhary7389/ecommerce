@@ -356,8 +356,8 @@ const Checkout = () => {
               <div className="flex gap-5">
                 <button
                   type="submit"
-                  disabled={loading}
-                  className="mt-6 w-full bg-blue-600 text-white sm:py-2 sm:px-4 py-1 px-2 rounded-md hover:bg-blue-700 cursor-pointer disabled:opacity-50 sm:text-base text-sm"
+                  disabled
+                  className="mt-6 w-full disabled cursor-not-allowed bg-blue-600 text-white sm:py-2 sm:px-4 py-1 px-2 rounded-md hover:bg-blue-700 disabled:opacity-50 sm:text-base text-sm"
                 >
                   {loading ? "Processing..." : "Pay online"}
                 </button>
