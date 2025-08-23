@@ -113,6 +113,15 @@ const Login = () => {
             Signup
           </Link>
         </p>
+        <p className="text-center text-sm text-gray-600 mt-1">
+          
+          <Link
+            to="/admin-login"
+            className="text-blue-500 underline font-medium hover:underline"
+          >
+            Admin Login
+          </Link>
+        </p>
       </div>
     </div>
   );
