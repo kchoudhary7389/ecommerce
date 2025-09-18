@@ -12,6 +12,7 @@ import {
   FaKey,
 } from "react-icons/fa";
 import { userLogout } from "../utils/logout";
+import { FaMicrophone } from "react-icons/fa6";
 import { userDataContext } from "../context/userContext";
 
 function Home() {
@@ -27,6 +28,8 @@ function Home() {
   const [maxPrice, setMaxPrice] = useState("");
   const [rating, setRating] = useState(0);
   const [ratingMessage, setRatingMessage] = useState("");
+  const [isListening, setIsListening] = useState(false);
+  const [spokenText, setSpokenText] = useState("");
 
   const logoutHandler = userLogout();
   const { userData } = useContext(userDataContext);
@@ -221,11 +224,25 @@ function Home() {
       )}
 
       {/* Header */}
+      {isListening && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg text-center w-80">
+            <p className="text-lg font-semibold mb-2">🎤 Listening...</p>
+            <p className="text-gray-600">
+              {spokenText || "Please speak a category"}
+            </p>
+          </div>
+        </div>
+      )}
+
       <header className="bg-white hidden sm:block shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
-            <Link to="/home" className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-            <img className="h-7 w-7 " src="/shopping-bag.png" alt="" />
+            <Link
+              to="/home"
+              className="text-2xl font-bold text-gray-800 flex items-center gap-2"
+            >
+              <img className="h-7 w-7 " src="/shopping-bag.png" alt="" />
               BagStore
             </Link>
             <div className="flex items-center space-x-4">
@@ -238,6 +255,45 @@ function Home() {
                   className="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <FaSearch className="absolute left-3 top-3 text-gray-400" />
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    const SpeechRecognition =
+                      window.SpeechRecognition ||
+                      window.webkitSpeechRecognition;
+
+                    if (!SpeechRecognition) {
+                      alert("Your browser does not support voice search");
+                      return;
+                    }
+
+                    const recognition = new SpeechRecognition();
+                    recognition.lang = "en-US";
+                    recognition.start();
+                    setIsListening(true); // 👈 show modal
+
+                    recognition.onresult = (event) => {
+                      const spoken = event.results[0][0].transcript;
+                      setSpokenText(spoken);
+                      setSearchTerm(spoken); // update your search state
+                      setIsListening(false); // close modal
+                    };
+
+                    recognition.onerror = (event) => {
+                      console.error("Speech recognition error:", event.error);
+                      setIsListening(false); // close modal on error
+                    };
+
+                    recognition.onend = () => {
+                      setIsListening(false); // close modal when finished
+                    };
+                  }}
+                  className="absolute right-2 top-3 cursor-pointer text-gray-500 hover:text-black"
+                >
+                  <FaMicrophone className="text-lg" />
+
+                </button>
               </div>
               <Link to="/cart" className="text-gray-600 hover:text-gray-800">
                 <FaShoppingCart className="text-2xl" />
@@ -268,7 +324,7 @@ function Home() {
               to="/home"
               className="sm:text-2xl text-lg font-bold text-gray-800 flex items-center gap-1"
             >
-               <img className="h-5 w-5 " src="/shopping-bag.png" alt="" />
+              <img className="h-5 w-5 " src="/shopping-bag.png" alt="" />
               BagStore
             </Link>
             <div className="flex items-center space-x-4">
@@ -312,6 +368,44 @@ function Home() {
             className="pl-10 pr-4 sm:py-2 py-1 border rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-fit placeholder:text-sm"
           />
           <FaSearch className="absolute sm:left-3 left-3 top-2.5 sm:top-3 text-gray-400 z-10" />
+          <button
+                  type="button"
+                  onClick={() => {
+                    const SpeechRecognition =
+                      window.SpeechRecognition ||
+                      window.webkitSpeechRecognition;
+
+                    if (!SpeechRecognition) {
+                      alert("Your browser does not support voice search");
+                      return;
+                    }
+
+                    const recognition = new SpeechRecognition();
+                    recognition.lang = "en-US";
+                    recognition.start();
+                    setIsListening(true); // 👈 show modal
+
+                    recognition.onresult = (event) => {
+                      const spoken = event.results[0][0].transcript;
+                      setSpokenText(spoken);
+                      setSearchTerm(spoken); // update your search state
+                      setIsListening(false); // close modal
+                    };
+
+                    recognition.onerror = (event) => {
+                      console.error("Speech recognition error:", event.error);
+                      setIsListening(false); // close modal on error
+                    };
+
+                    recognition.onend = () => {
+                      setIsListening(false); // close modal when finished
+                    };
+                  }}
+                  className="absolute right-2 top-2 cursor-pointer text-gray-500 hover:text-black"
+                >
+                  <FaMicrophone className="text-lg" />
+
+                </button>
         </div>
         {/* Filters */}
         <div className="mb-8 flex flex-wrap items-center gap-4">
